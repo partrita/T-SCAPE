@@ -3,15 +3,15 @@ import random
 
 import numpy as np
 import torch
-from src.constants import PAD, MASK, ALL_AAS
-from src.utils_el import Tokenizer
+from .constants import PAD, MASK, ALL_AAS
+from .utils_el import Tokenizer
 
 from torch.utils.data import Dataset
 import pandas as pd
 from torch.utils.data import Sampler
 import csv
 
-from src.utils_el import one_hot_encode
+from .utils_el import one_hot_encode
 
 
 def _pad(tokenized: List[torch.Tensor], value: int) -> torch.Tensor:

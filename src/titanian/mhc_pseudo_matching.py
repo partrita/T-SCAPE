@@ -38,11 +38,10 @@ def process_allele_entry(s):
 
 def load_mhc_data(class_):
     """Load MHC class data based on the specified class."""
-    parent = Path(__file__).resolve(True).parent
     if class_ == "I":
-        return pd.read_csv(parent / "MHC_classI_pseudo.csv")
+        return pd.read_csv("example/data/MHC_classI_pseudo.csv")
     elif class_ == "II":
-        return pd.read_csv(parent / "MHC_classII_pseudo.csv")
+        return pd.read_csv("example/data/MHC_classII_pseudo.csv")
     else:
         raise ValueError("MHC class should be 'I' or 'II'")
 

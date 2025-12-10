@@ -1,5 +1,5 @@
-# TITANiAN : Robust prediction of T-cell epitope immunogenicity using adversarial domain adaptation network
-This repository represents a novel T-cell epitope immunogenicity prediction model that leverages a multi-domain deep learning approach. Technical details and thorough analysis can be found in our paper, [TITANiAN: Robust prediction of T-cell epitope immunogenicity using adversarial domain adaptation network](https://www.biorxiv.org/content/10.1101/2025.05.11.653308v1), written by Jeonghyeon Kim, Nuri Jung, Jayyoon Lee, Nam-Hyuk Cho, Jinsung Noh, and Chaok Seok. If you have any question, feel free to open an issue or reach out at jeonghyeonkim86@gmail.com.
+# T-SCAPE : Robust prediction of T-cell epitope immunogenicity using adversarial domain adaptation network
+This repository represents a novel T-cell epitope immunogenicity prediction model that leverages a multi-domain deep learning approach. Technical details and thorough analysis can be found in our paper, [T-SCAPE: Robust prediction of T-cell epitope immunogenicity using adversarial domain adaptation network](https://www.biorxiv.org/content/10.1101/2025.05.11.653308v1), written by Jeonghyeon Kim, Nuri Jung, Jayyoon Lee, Nam-Hyuk Cho, Jinsung Noh, and Chaok Seok. If you have any question, feel free to open an issue or reach out at jeonghyeonkim86@gmail.com.
 
 ## Installation guide(linux only)
 1. Install [Anaconda](https://www.anaconda.com/download) if you have not installed it yet.
@@ -7,15 +7,12 @@ This repository represents a novel T-cell epitope immunogenicity prediction mode
 3. Clone this repository
 
 ```bash
-$ git clone https://github.com/seoklab/TITANiAN.git
+$ git clone https://github.com/partrita/T-SCAPE.git
 ```
 4. Create a conda environment using following commands
 
 ```bash
-conda create -n immuno python=3.10
-conda activate immuno
-conda install numpy matplotlib scikit-learn pandas wandb
-conda install pytorch torchvision torchaudio pytorch-cuda=11.8 -c pytorch -c nvidia
+uv sync
 ```
 
 5. Download the parameter from [google drive](https://drive.google.com/drive/folders/12EqwOtTEX7VCgP3LQIRegpaK1JJiAjjd?usp=sharing) and place it in the main directory location.
@@ -37,8 +34,8 @@ peptide represents peptide you want to check immunogenicity. Each character in t
 After you prepare the input as above, you can get output by running following commands.
 
 ```bash
-python mhc_pseudo_matching.py I ./example/inputs/pmhc_im.csv ./example/inputs/pmhc_im_modified.csv \
-python inference_csv.py --csv_path example/inputs/pmhc_im_modified.csv --inf_type pmhc_im_neo --output example/outputs/pmhc_im_output.csv
+uv run python mhc_pseudo_matching.py I ./example/inputs/pmhc_im.csv ./example/inputs/pmhc_im_modified.csv \
+uv run python inference_csv.py --csv_path example/inputs/pmhc_im_modified.csv --inf_type pmhc_im_neo --output example/outputs/pmhc_im_output.csv
 ```
 
 The output score represents the immunogenicity probability of the input peptide-MHC pair. This score can be used to rank the immunogenicity of peptide-MHC pairs or to determine if a pair is immunogenic by checking if the score exceeds 0.5. Both applications show excellent performance according to our manuscript benchmarks.
@@ -54,8 +51,8 @@ peptide represents peptide you want to check immunogenicity. Each character in t
 After you prepare the input as above, you can get output by running following commands.
 
 ```bash
-python mhc_pseudo_matching.py I ./example/inputs/pmhc_im.csv ./example/inputs/pmhc_im_modified.csv \
-python inference_csv.py --csv_path example/inputs/pmhc_im_modified.csv --inf_type pmhc_im_inf --output example/outputs/pmhc_im_output.csv
+uv run python mhc_pseudo_matching.py I ./example/inputs/pmhc_im.csv ./example/inputs/pmhc_im_modified.csv 
+uv run python inference_csv.py --csv_path example/inputs/pmhc_im_modified.csv --inf_type pmhc_im_inf --output example/outputs/pmhc_im_output.csv
 ```
 
 The output score represents the immunogenicity probability of the input peptide-MHC pair. This score can be used to rank the immunogenicity of peptide-MHC pairs or to determine if a pair is immunogenic by checking if the score exceeds 0.5. Both applications show excellent performance according to our manuscript benchmarks.
@@ -69,7 +66,7 @@ peptide represents peptide you want to check immunogenicity. Each character in t
 After you prepare the input as above, you can get output by running following commands.
 
 ```bash
-python inference_csv.py --csv_path example/inputs/p_im.csv --inf_type p_im --output example/outputs/p_im_output.csv
+uv run python inference_csv.py --csv_path example/inputs/p_im.csv --inf_type p_im --output example/outputs/p_im_output.csv
 ```
 
 The output score indicates the immunogenicity probability of the input peptide sequence. We recommend using this score to identify immunogenic parts of the sequence. If the score exceeds 0.5, the peptide is considered immunogenic. If over 20% of the peptides are immunogenic, the entire sequence can be classified as immunogenic. These thresholds are recommended based on our benchmarks.
@@ -85,8 +82,8 @@ peptide represents peptide you want to check. Each character in the peptide colu
 After you prepare the input as above, you can get output by running following commands.
 
 ```bash
-python mhc_pseudo_matching.py I ./example/inputs/pmhc_ba_I.csv ./example/inputs/pmhc_ba_I_modified.csv \
-python inference_csv.py --csv_path example/inputs/pmhc_ba_I_modified.csv --inf_type pmhc_ba_I --output example/outputs/pmhc_ba_I_output.csv
+uv run python mhc_pseudo_matching.py I ./example/inputs/pmhc_ba_I.csv ./example/inputs/pmhc_ba_I_modified.csv
+uv run python inference_csv.py --csv_path example/inputs/pmhc_ba_I_modified.csv --inf_type pmhc_ba_I --output example/outputs/pmhc_ba_I_output.csv
 ```
 
 
@@ -104,8 +101,8 @@ peptide represents peptide you want to check. Each character in the peptide colu
 After you prepare the input as above, you can get output by running following commands.
 
 ```bash
-python mhc_pseudo_matching.py II ./example/inputs/pmhc_ba_II.csv ./example/inputs/pmhc_ba_II_modified.csv
-python inference_csv.py --csv_path example/inputs/pmhc_ba_II_modified.csv --inf_type pmhc_ba_II --output example/outputs/pmhc_ba_II_output.csv
+uv run python mhc_pseudo_matching.py II ./example/inputs/pmhc_ba_II.csv ./example/inputs/pmhc_ba_II_modified.csv
+uv run python inference_csv.py --csv_path example/inputs/pmhc_ba_II_modified.csv --inf_type pmhc_ba_II --output example/outputs/pmhc_ba_II_output.csv
 ```
 
 The output score represents the binding probability of the input peptide-MHC class II pair. This score can be used to rank binding probabilities of peptide-MHC pairs or to determine if a pair is binding by checking if the score exceeds 0.5. Both applications show excellent performance according to our manuscript benchmarks.
@@ -121,7 +118,7 @@ peptide represents peptide you want to check. Each character in the peptide colu
 After you prepare the input as above, you can get output by running following commands.
 
 ```bash
-python inference_csv.py --csv_path example/inputs/ptcr_ba.csv --inf_type ptcr_ba --output example/outputs/pmhc_ba_output.csv
+uv run python inference_csv.py --csv_path example/inputs/ptcr_ba.csv --inf_type ptcr_ba --output example/outputs/pmhc_ba_output.csv
 ```
 
 The output score represents the binding probability of the input TCR CDR3 β-peptide pair. This score can be used to rank binding probabilities of TCR CDR3 β-peptide pairs or to determine if a pair is binding by checking if the score exceeds 0.5.

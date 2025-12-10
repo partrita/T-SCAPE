@@ -12,7 +12,25 @@ from .constants import PAD, PROTEIN_ALPHABET
 parent = Path(__file__).resolve(True).parent
 
 
-def main(args):
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--csv_path", type=str, required=True, help="path to the csv file"
+    )
+    parser.add_argument(
+        "--inf_type",
+        type=str,
+        required=True,
+        help="type of inference, pmhc_im, p_im, pmhc_ba_I, pmhc_ba_II, ptcr_ba ",
+    )
+    parser.add_argument(
+        "--output", type=str, required=True, help="path to the output csv file"
+    )
+    args = parser.parse_args()
+
+    print("Arguments:")
+    for p in vars(args).items():
+        print("  ", p[0] + ": ", p[1])
     if args.inf_type == "pmhc_im_neo":
         name_ = (
             "best_param/pmhc_im_neo/BigMHC_finalMedium_OAS_el-mlm_ADV1.0_bestvalloss.pt"
@@ -31,7 +49,7 @@ def main(args):
         raise ValueError(f"Unknown inf_type: {args.inf_type!r}")
 
     args.name = name_
-    save_path = parent / name_
+    save_path = name_
     if ("rnd" in name_) | ("fused" in name_):
         args.d_model = 280
         args.embedding_dim = 280
@@ -47,7 +65,7 @@ def main(args):
         r=1,
         mask_condition=False,
     )
-    device = torch.device("cpu")
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     ckpt = torch.load(save_path, map_location=device)
 
@@ -65,7 +83,7 @@ def main(args):
         model_final.load_state_dict(model_state_dict)
     if args.inf_type == "pmhc_ba_I":
         if "fused" in args.name:
-            from src.model_fused import task3
+            from .model_fused import task3
 
             model_final = task3(
                 d_model=args.d_model,
@@ -95,7 +113,6 @@ def main(args):
                 if "task3_decoder." in k
             }
             model_final.task3_decoder.load_state_dict(adjusted_state_dict)
-            model_final.to(device)
         elif "neg" in args.name:
             from .model_el import task3
 
@@ -127,7 +144,6 @@ def main(args):
                 if "task3_decoder." in k
             }
             model_final.task3_decoder.load_state_dict(adjusted_state_dict)
-            model_final.to(device)
         elif "mlm" in args.name:
             from .model_mlm import task3
 
@@ -159,10 +175,9 @@ def main(args):
                 if "task3_decoder." in k
             }
             model_final.task3_decoder.load_state_dict(adjusted_state_dict)
-            model_final.to(device)
     if args.inf_type == "pmhc_el_I":
         if "fused" in args.name:
-            from src.model_fused import task4
+            from .model_fused import task4
 
             model_final = task4(
                 d_model=args.d_model,
@@ -191,7 +206,6 @@ def main(args):
                 if "task4_decoder." in k
             }
             model_final.task4_decoder.load_state_dict(adjusted_state_dict)
-            model_final.to(device)
         elif "neg" in args.name:
             from .model_el import task4
 
@@ -222,13 +236,12 @@ def main(args):
                 if "task4_decoder." in k
             }
             model_final.task4_decoder.load_state_dict(adjusted_state_dict)
-            model_final.to(device)
         elif "mlm" in args.name:
             print("NO MLM MODEL FOR EL")
             return
     if args.inf_type == "pmhc_ba_II":
         if "fused" in args.name:
-            from src.model_fused import task6
+            from .model_fused import task6
 
             model_final = task6(
                 d_model=args.d_model,
@@ -259,7 +272,6 @@ def main(args):
                 if "task6_decoder." in k
             }
             model_final.task6_decoder.load_state_dict(adjusted_state_dict)
-            model_final.to(device)
         elif "neg" in args.name:
             from .model_el import task5
 
@@ -291,7 +303,6 @@ def main(args):
                 if "task5_decoder." in k
             }
             model_final.task5_decoder.load_state_dict(adjusted_state_dict)
-            model_final.to(device)
         elif "mlm" in args.name:
             from .model_mlm import task5
 
@@ -323,7 +334,6 @@ def main(args):
                 if "task5_decoder." in k
             }
             model_final.task5_decoder.load_state_dict(adjusted_state_dict)
-            model_final.to(device)
     if args.inf_type == "pmhc_el_II":
         if "fused" in args.name:
             from .model_fused import task7
@@ -356,7 +366,6 @@ def main(args):
                 if "task7_decoder." in k
             }
             model_final.task7_decoder.load_state_dict(adjusted_state_dict)
-            model_final.to(device)
         elif "neg" in args.name:
             from .model_el import task6
 
@@ -387,7 +396,6 @@ def main(args):
                 if "task6_decoder." in k
             }
             model_final.task6_decoder.load_state_dict(adjusted_state_dict)
-            model_final.to(device)
         elif "mlm " in args.name:
             print("NO MLM MODEL FOR EL")
             return
@@ -423,7 +431,6 @@ def main(args):
                 if "task9_decoder." in k
             }
             model_final.task9_decoder.load_state_dict(adjusted_state_dict)
-            model_final.to(device)
         elif "neg" in args.name:
             from .model_el import task7
 
@@ -454,7 +461,6 @@ def main(args):
                 if "task7_decoder." in k
             }
             model_final.task7_decoder.load_state_dict(adjusted_state_dict)
-            model_final.to(device)
         elif "mlm" in args.name:
             from .model_mlm import task7
 
@@ -485,7 +491,7 @@ def main(args):
                 if "task7_decoder." in k
             }
             model_final.task7_decoder.load_state_dict(adjusted_state_dict)
-            model_final.to(device)
+    model_final.to(device)
     model_final.eval()
 
     inf_collator = Collater_test(
@@ -514,10 +520,11 @@ def main(args):
     test_loader = DataLoader(
         test_dataset, batch_size=32, shuffle=False, collate_fn=inf_collator
     )
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     if "fused" in args.name:
         task_dict = {
             "pmhc_im": [3],
+            "pmhc_im_neo": [3],
+            "pmhc_im_inf": [3],
             "p_im": [1],
             "pmhc_el_I": [4],
             "pmhc_el_II": [7],
@@ -528,6 +535,8 @@ def main(args):
     if "neg" in args.name:
         task_dict = {
             "pmhc_im": [3],
+            "pmhc_im_neo": [3],
+            "pmhc_im_inf": [3],
             "p_im": [1],
             "pmhc_el_I": [4],
             "pmhc_el_II": [6],
@@ -538,6 +547,8 @@ def main(args):
     if "mlm" in args.name:
         task_dict = {
             "pmhc_im": [3],
+            "pmhc_im_neo": [3],
+            "pmhc_im_inf": [3],
             "p_im": [1],
             "pmhc_el_I": [4],
             "pmhc_el_II": [6],
@@ -602,22 +613,4 @@ def main(args):
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser()
-    parser.add_argument(
-        "--csv_path", type=str, required=True, help="path to the csv file"
-    )
-    parser.add_argument(
-        "--inf_type",
-        type=str,
-        required=True,
-        help="type of inference, pmhc_im, p_im, pmhc_ba_I, pmhc_ba_II, ptcr_ba ",
-    )
-    parser.add_argument(
-        "--output", type=str, required=True, help="path to the output csv file"
-    )
-    args = parser.parse_args()
-
-    print("Arguments:")
-    for p in vars(args).items():
-        print("  ", p[0] + ": ", p[1])
-    main(args)
+    main()

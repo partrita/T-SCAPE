@@ -5,8 +5,8 @@ import pandas as pd
 from scipy.spatial.distance import squareform, pdist
 import torch
 
-from src.constants import STOP, START, MASK, PAD
-from src.constants import PROTEIN_ALPHABET
+from .constants import STOP, START, MASK, PAD
+from .constants import PROTEIN_ALPHABET
 from sklearn.metrics import (
     roc_auc_score,
     precision_recall_curve,

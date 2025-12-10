@@ -2,10 +2,10 @@ import torch.nn as nn
 import torch
 import torch.nn.functional as F
 import numpy as np
-from src.utils_el import Tokenizer
-from src.constants import PAD
-from src.layers import PositionFeedForward, DoubleEmbedding
-from src.utils_el import one_hot_encode
+from .utils_el import Tokenizer
+from .constants import PAD
+from .layers import PositionFeedForward, DoubleEmbedding
+from .utils_el import one_hot_encode
 
 
 class MaskedConv1d(nn.Conv1d):
