@@ -13,6 +13,7 @@ dependencies = [
 	"torch>=2.7.0",
 	"torchaudio>=2.7.0",
 	"torchvision>=0.22.0",
+	"urllib3>=2.7.0",
 	"wandb>=0.19.11",
 ]
 
